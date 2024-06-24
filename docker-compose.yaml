@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: virtual_campus
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_URL=postgresql://postgres:password@db:5432/virtual_campus
+      - PORT=3001
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '3001:3001'
+    depends_on:
+      - db
+
+volumes:
+  db-data:
